@@ -1,0 +1,17 @@
+{
+  "name": "jra-tech-ordem-servico",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicativo offline de ordens de serviço para assistência técnica JRA TECH",
+  "scripts": {
+    "build": "echo 'Aplicativo web pronto para sincronizar com Capacitor'",
+    "android:sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}

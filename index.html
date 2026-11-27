@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>JRA TECH - Ordem de Serviço</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand-mark">JT</div>
+  <div><h1>JRA TECH</h1><small>ORDEM DE SERVIÇO</small></div>
+  <button class="icon-btn" id="backupBtn" title="Backup">⇧</button>
+</header>
+<main>
+  <section id="dashboard" class="screen active">
+    <div class="welcome"><div><p class="eyebrow">PAINEL DE CONTROLE</p><h2>Olá! 👋</h2><p class="muted">Gerencie sua assistência técnica.</p></div><span class="offline">● Offline</span></div>
+    <div class="stats">
+      <article><span>Ordens abertas</span><strong id="openCount">0</strong></article>
+      <article><span>Em manutenção</span><strong id="repairCount">0</strong></article>
+      <article><span>A receber</span><strong id="receivable">R$ 0,00</strong></article>
+      <article><span>Peças em estoque</span><strong id="stockCount">0</strong></article>
+    </div>
+    <button class="primary big" id="newOrderBtn">＋ Nova ordem de serviço</button>
+    <div class="section-head"><h3>Atalhos</h3></div>
+    <div class="shortcut-grid">
+      <button data-go="orders">▤<span>Ordens</span></button><button data-go="customers">♙<span>Clientes</span></button>
+      <button data-go="stock">▦<span>Estoque</span></button><button data-go="finance">R$<span>Financeiro</span></button>
+    </div>
+    <div class="section-head"><h3>Últimas ordens</h3><button class="text-btn" data-go="orders">Ver todas</button></div>
+    <div id="recentOrders" class="list"></div>
+  </section>
+
+  <section id="orders" class="screen">
+    <div class="page-title"><div><p class="eyebrow">ATENDIMENTOS</p><h2>Ordens de serviço</h2></div><button class="primary" id="newOrderBtn2">＋ Nova OS</button></div>
+    <input id="orderSearch" class="search" placeholder="Buscar por número, cliente ou aparelho...">
+    <div id="ordersList" class="list"></div>
+  </section>
+
+  <section id="orderForm" class="screen">
+    <div class="page-title"><div><p class="eyebrow">ATENDIMENTO</p><h2 id="formTitle">Nova ordem</h2></div><button class="text-btn" data-go="orders">Cancelar</button></div>
+    <form id="osForm">
+      <input type="hidden" id="osId">
+      <div class="card"><h3>Cliente</h3>
+        <label>Nome do cliente *<input id="clientName" required placeholder="Nome completo"></label>
+        <label>Telefone / WhatsApp<input id="clientPhone" inputmode="tel" placeholder="(00) 00000-0000"></label>
+      </div>
+      <div class="card"><h3>Aparelho</h3>
+        <label>Marca *<input id="deviceBrand" required placeholder="Samsung, Motorola, Apple..."></label>
+        <label>Modelo *<input id="deviceModel" required placeholder="Ex.: Galaxy A05"></label>
+        <label>IMEI (opcional)<input id="imei" placeholder="Número do IMEI"></label>
+        <label>Senha/padrão (opcional)<input id="devicePassword" placeholder="Somente se necessário"></label>
+        <label>Defeito informado *<textarea id="reportedIssue" required placeholder="Descreva o problema relatado pelo cliente"></textarea></label>
+        <label>Estado físico / acessórios<textarea id="condition" placeholder="Trincos, riscos, chip, capa, carregador..."></textarea></label>
+        <label>Fotos do aparelho<input id="photos" type="file" accept="image/*" capture="environment" multiple></label>
+        <div id="photoPreview" class="photo-preview"></div>
+      </div>
+      <div class="card"><h3>Diagnóstico e orçamento</h3>
+        <label>Diagnóstico<textarea id="diagnosis" placeholder="Diagnóstico técnico"></textarea></label>
+        <label>Serviço a realizar<input id="service" placeholder="Ex.: Troca de tela"></label>
+        <div class="two"><label>Custo das peças (R$)<input id="partsCost" type="number" min="0" step="0.01" value="0"></label><label>Mão de obra (R$)<input id="labor" type="number" min="0" step="0.01" value="0"></label></div>
+        <label>Valor total (R$)<input id="total" type="number" min="0" step="0.01" value="0"></label>
+        <label>Status<select id="status"><option>Aguardando avaliação</option><option>Aguardando aprovação</option><option>Aguardando peça</option><option>Em manutenção</option><option>Concluído</option><option>Entregue</option><option>Cancelado</option></select></label>
+      </div>
+      <div class="card"><h3>Pagamento</h3>
+        <div class="two"><label>Valor recebido (R$)<input id="paid" type="number" min="0" step="0.01" value="0"></label><label>Forma<select id="paymentMethod"><option>Dinheiro</option><option>PIX</option><option>Cartão de crédito</option><option>Cartão de débito</option><option>Parcelado</option><option>Fiado</option></select></label></div>
+        <label>Parcelas / vencimento<input id="paymentNote" placeholder="Ex.: 2x de R$ 50 ou vence em 10/12"></label>
+        <p class="balance" id="balancePreview">Saldo: R$ 0,00</p>
+      </div>
+      <div class="card"><h3>Assinatura na entrada</h3><p class="muted small">Peça ao cliente para assinar na área abaixo.</p><canvas id="signatureIn" class="signature"></canvas><button type="button" class="text-btn" id="clearIn">Limpar assinatura</button></div>
+      <button class="primary big" type="submit">Salvar ordem de serviço</button>
+    </form>
+  </section>
+
+  <section id="detail" class="screen">
+    <div class="page-title"><div><p class="eyebrow">DETALHES</p><h2 id="detailTitle">OS</h2></div><button class="text-btn" data-go="orders">Voltar</button></div>
+    <div id="detailContent"></div>
+  </section>
+
+  <section id="customers" class="screen">
+    <div class="page-title"><div><p class="eyebrow">CADASTROS</p><h2>Clientes</h2></div></div>
+    <input id="customerSearch" class="search" placeholder="Buscar cliente..."><div id="customersList" class="list"></div>
+  </section>
+
+  <section id="stock" class="screen">
+    <div class="page-title"><div><p class="eyebrow">PEÇAS E MATERIAIS</p><h2>Estoque</h2></div></div>
+    <form id="stockForm" class="card">
+      <h3>Adicionar peça / entrada</h3>
+      <label>Nome da peça<input id="partName" required placeholder="Ex.: Tela Galaxy A05"></label>
+      <div class="two"><label>Quantidade<input id="partQty" type="number" min="1" value="1" required></label><label>Custo unitário (R$)<input id="partPrice" type="number" min="0" step="0.01" value="0"></label></div>
+      <button class="primary" type="submit">Adicionar ao estoque</button>
+    </form>
+    <div id="stockList" class="list"></div>
+  </section>
+
+  <section id="finance" class="screen">
+    <div class="page-title"><div><p class="eyebrow">CONTROLE FINANCEIRO</p><h2>Financeiro</h2></div></div>
+    <div class="stats"><article><span>Faturamento registrado</span><strong id="revenue">R$ 0,00</strong></article><article><span>Em aberto</span><strong id="due">R$ 0,00</strong></article></div>
+    <div id="financeList" class="list"></div>
+  </section>
+
+  <section id="settings" class="screen">
+    <div class="page-title"><div><p class="eyebrow">DADOS E PREFERÊNCIAS</p><h2>Configurações</h2></div></div>
+    <div class="card"><h3>Backup e restauração</h3><p class="muted">Exporte seus dados para um arquivo e guarde em local seguro. O backup inclui clientes, ordens, assinaturas e fotos.</p><button class="primary" id="exportBtn">Exportar backup</button><label class="file-label">Restaurar backup<input type="file" id="importFile" accept="application/json"></label></div>
+    <div class="card"><h3>Sobre</h3><p>JRA TECH – Ordem de Serviço</p><p class="muted small">Versão inicial 1.0 • Dados armazenados localmente neste aparelho.</p><p class="muted small">A garantia padrão configurada é de 90 dias após a conclusão, podendo ser registrada na ordem. Confira e informe as condições aplicáveis ao cliente.</p></div>
+  </section>
+</main>
+<nav class="bottom-nav">
+  <button class="nav active" data-go="dashboard">⌂<span>Início</span></button>
+  <button class="nav" data-go="orders">▤<span>Ordens</span></button>
+  <button class="nav" data-go="stock">▦<span>Estoque</span></button>
+  <button class="nav" data-go="finance">R$<span>Financeiro</span></button>
+  <button class="nav" data-go="settings">⚙<span>Ajustes</span></button>
+</nav>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
