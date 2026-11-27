@@ -1,4 +1,4 @@
-name: Gerar APK Android - JRA TECH
+.github/workflows/android-apk.ymlname: Gerar APK Android - JRA TECH
 
 on:
   workflow_dispatch:
